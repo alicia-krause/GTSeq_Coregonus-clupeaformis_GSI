@@ -1,5 +1,9 @@
 #Realistic fisheries mixture simulations
 
+#Load required packages to run code
+library(rubias)
+library(tidyverse)
+
 #################################################
 
 #Create fishery mixture proportions
