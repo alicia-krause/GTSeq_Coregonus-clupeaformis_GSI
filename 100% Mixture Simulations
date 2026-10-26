@@ -1,5 +1,9 @@
 #Simulate 100% genetic mixtures and produce output plot
 
+#Load required packages
+library(rubias)
+library(tidyverse)
+
 ########################################################
 #Read in files
 refDat <- read_csv("LWFBASE-206-1020supplc..csv") 
