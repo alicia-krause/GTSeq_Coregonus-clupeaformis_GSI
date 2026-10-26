@@ -1,0 +1,58 @@
+#Realistic fisheries mixture simulations
+
+#################################################
+
+#Create fishery mixture proportions
+DirichletProps<-as.data.frame(rbind(
+  MCMCpack::rdirichlet(25,c(rep(0.01,6))),#somefixed
+  MCMCpack::rdirichlet(50,c(rep(0.1,6))),
+  MCMCpack::rdirichlet(500,c(rep(1,6))),
+  MCMCpack::rdirichlet(50,c(rep(10,6)))))
+hist(DirichletProps[,1])
+
+#Create reporting groups
+RepGroups_7RG<- RepGroups
+colnames(DirichletProps)<-RepGroups_7RG
+DirichletProps$Analysis<-1:nrow(DirichletProps)
+
+RFpropsDir<-reshape2::melt(DirichletProps, id=c("Analysis"))
+
+#Make a list of scenarios
+RF_scenarios_lwf_SS.SNPs_7RG <- lapply(unique(RFpropsDir$Analysis), function(x) 
+  RFpropsDir %>%
+    filter(Analysis == x) %>%
+    ungroup()%>%
+    select(-1)%>%
+    setNames(.,c("repunit", "ppn" )))
+
+names(RF_scenarios_lwf_SS.SNPs_7RG)<-paste("RF-",seq(1,nrow(DirichletProps)),sep="")
+
+#Run simulation
+RF_results_lwf_SS.SNPs_7RG <- assess_reference_loo(reference = refDat, 
+                                                   gen_start_col = 5, 
+                                                   reps = 50, 
+                                                   mixsize = 100,
+                                                   alpha_repunit = RF_scenarios_lwf_SS.SNPs_7RG,
+                                                   resampling_unit = "gene_copies",
+                                                   return_indiv_posteriors = F)
+
+#Create summary report for plotting
+RFsum_lwfSS.SNPs_7RG <- RF_results_lwf_SS.SNPs_7RG %>%
+  mutate(repunit_f = factor(x = repunit, levels = RepGroups_7RG))%>%
+  group_by(repunit_scenario, iter, repunit_f) %>% 
+  summarise(true_repprop = sum(true_pi), reprop_posterior_mean = sum(post_mean_pi), repu_n = sum(n)) %>% 
+  mutate(repu_n_prop = repu_n / sum(repu_n))
+
+#Create plot
+ggplot(RFsum_lwfSS.SNPs_7RG, aes(x = repu_n_prop, y = reprop_posterior_mean, colour = repunit_f)) +
+  geom_point() +
+  scale_color_discrete(name = "Reporting Group")+
+  geom_abline(intercept = 0, slope = 1)+
+  geom_abline(intercept = 0.1, slope = 1,lty=2)+
+  geom_abline(intercept = -0.1, slope = 1,lty=2)+
+  facet_wrap(~ repunit_f)+
+  ylab("Posterior Mean Reporting Group Proportion") +
+  xlab("Simulated Mixture Proportion") +
+  guides(colour = "none") +
+  xlab("True Mixture Proportion") +
+  theme_bw(base_size = 15)
