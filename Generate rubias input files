@@ -1,4 +1,9 @@
-#Code to create inpue .csv files for rubias genetic stock identification
+#Code to create input .csv files for rubias genetic stock identification
+
+#Load required packages to run code
+library(tidyverse)
+library(readxl)
+library(adegenet)
 
 ######################################################################
 
