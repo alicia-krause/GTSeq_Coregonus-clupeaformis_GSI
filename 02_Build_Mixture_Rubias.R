@@ -1,5 +1,5 @@
 # =========================================
-# Data preparation and create of mixed-stock genotypes for RUBIAS, Moran and Andersone, 2019 (local v0.3)
+# Data preparation and create of mixed-stock genotypes for RUBIAS, Moran and Anderson, 2019 (local v0.3)
 # Dataset: Lake whitefish (Coregonus clupeaformis) genepop files from 01_GTscore_genotyping.R
 # =========================================
 
