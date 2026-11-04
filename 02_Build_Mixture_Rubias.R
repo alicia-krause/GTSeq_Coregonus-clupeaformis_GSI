@@ -188,3 +188,46 @@ lwfMixed <- outTib %>%
 # Output constructed RUBIAS file
 write.csv(lwfMixed, "./MixtureSamples.csv")
 
+
+# =========================================
+
+# 08 | Match baseline and mixed stock files and export files (sample sizes and collection groupings)
+
+# Create output for files
+dir.create("./output", showWarnings = FALSE)
+
+# Read in baseline dataset (in RUBIAS format), this file defines all loci
+refDat <- read_csv("./lwfRubiasBaseline.csv")
+
+# Drop the two loci removed from the mixed stock datset in filtering above (line 74)
+refDat <- refDat %>%
+  select(-c("891923_SNP1_102.1", "891923_SNP1_102", "569374_SNP1_156.1", "569374_SNP1_156"))
+
+# Export mixture RUBIAS files
+# Two groupings of the samples were analysed: management zone + year + season, and management zone + year
+for (grouping in c("SeasonYearZone", "YearZone")) {
+  mixDat <- lwfMixed
+  if (grouping == "YearZone") {
+    mixDat <- mixDat %>% mutate(collection = str_remove(collection, " [^ ]+$"))   # drop the season
+  }
+  
+  #Omiting samples sets with less than 20 samples
+  mixDat <- mixDat %>%
+    group_by(collection) %>%
+    filter(n() >= 20) %>% 
+    ungroup()
+  
+  sampleSize <- mixDat %>%
+    group_by(collection) %>%
+    count()
+  write.csv(sampleSize, paste0("./output/SampleSize_", grouping, ".csv"))
+  
+  mixDat1 <- mixDat %>%
+    select(colnames(refDat))
+  
+  setdiff(colnames(mixDat1), colnames(refDat))
+  setdiff(colnames(refDat), colnames(mixDat1))
+  
+  ##Write out rubias file
+  write_csv(mixDat1, paste0("./output/lwfRubiasMixed_", grouping, ".csv"))
+}
