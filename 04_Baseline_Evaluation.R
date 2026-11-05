@@ -185,7 +185,7 @@ RF_results_lwf <- assess_reference_loo(reference = refDat,
                                        resampling_unit = "gene_copies",
                                        return_indiv_posteriors = F)
 
-# Simulation outpus summary
+# Simulation output summary
 RFsum_lwf <- RF_results_lwf %>%
   mutate(repunit_f = factor(x = repunit, levels = RepGroups)) %>%
   group_by(repunit_scenario, iter, repunit_f) %>% 
