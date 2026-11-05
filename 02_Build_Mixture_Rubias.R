@@ -96,7 +96,7 @@ dat.genind_duplicatesRemoved <- dat.genind_missingREM
 # 04 | Join sample metadata and select mixed-stock samples
 
 # Import sample metadata
-metaDat <- read_excel("./sampleInfoKey_edited.xlsx") %>% 
+metaDat <- read_excel("./sampleInfoKey.xlsx") %>% 
   filter(SampleID %in% indNames(dat.genind_duplicatesRemoved)) 
 
 # Retain metadata for genotyped individuals and retain indivduals in genind that are in metadata
