@@ -199,10 +199,6 @@ dir.create("./output", showWarnings = FALSE)
 # Read in baseline dataset (in RUBIAS format), this file defines all loci
 refDat <- read_csv("./lwfRubiasBaseline.csv")
 
-# Drop the two loci removed from the mixed stock datset in filtering above (line 74)
-refDat <- refDat %>%
-  select(-c("891923_SNP1_102.1", "891923_SNP1_102", "569374_SNP1_156.1", "569374_SNP1_156"))
-
 # Export mixture RUBIAS files
 # Two groupings of the samples were analysed: management zone + year + season, and management zone + year
 for (grouping in c("SeasonYearZone", "YearZone")) {
