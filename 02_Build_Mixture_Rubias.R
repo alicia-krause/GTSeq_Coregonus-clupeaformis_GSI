@@ -13,11 +13,11 @@ library(radiator)
 # 01 | Import and harmonize repeated sequencing runs
 
 # Read each genepop file
-dat9.genind <- read.genepop("./genepop/2204_Nov_REDO_Cclu_R1_polyGenResults_singleSNP_genepop.gen",
+dat9.genind <- read.genepop("./genepop/2204_Nov_REDO_Cclu_R1_0392_polyGenResults_singleSNP_genepop.gen",
                             ncode = 2,
                             quiet = F) 
 
-dat10.genind <- read.genepop("./genepop/2204_Sep_REDO_Cclu_OLD_R1_polyGenResults_singleSNP_genepop_1.gen",
+dat10.genind <- read.genepop("./genepop/2204_Sep_REDO_Cclu_OLD_R1_0392_polyGenResults_singleSNP_genepop_1.gen",
                              ncode = 2,
                              quiet = F)
 
@@ -36,7 +36,7 @@ datREDO.genind <- repool(dat9_filtered.genind, dat10_filtered.genind)
 # 02 | Harmonize repeat-run genotypes with primary genepop file
 
 # Read genepop file
-dat8.genind <- read.genepop("./genepop/Cclu_All_polyGenResults_singleSNP_genepop.gen",
+dat8.genind <- read.genepop("./genepop/Cclu_All_0392_polyGenResults_singleSNP_genepop.gen",
                             ncode = 2,
                             quiet = F)
 
