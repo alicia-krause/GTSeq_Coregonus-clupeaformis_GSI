@@ -114,21 +114,7 @@ dat.mixed <- dat.genind_metaDat[pop = "MSA"]
 
 # =========================================
 
-# 05 | Restrict mixture dataset to two-allele-column loci (rubias file creation did no work with loci represented by one allele column)
-
-# Count allele columns per locus in genind file
-allele_counts <- table(adegenet::locFac(dat.mixed))
-# Identify loci with two allele columns
-keep_loci <- names(allele_counts[allele_counts == 2])
-# Match locus names to their positions in the genind object
-keep_idx <- which(locNames(dat.mixed) %in% keep_loci)
-# Remove loci with only one allele column
-dat.mixed.filtered <- dat.mixed[, loc = keep_idx]
-
-
-# =========================================
-
-# 06 | Retain metadata for MSA samples and align it with genotype rows for RUBIAS file creation
+# 05 | Retain metadata for MSA samples and align it with genotype rows for RUBIAS file creation
 
 # Subset metadata identifiers
 Dat.mixed <- metaDat %>% 
@@ -148,7 +134,7 @@ Dat.mixed <- metaDat %>%
 
 # =========================================
 
-# 07 | Convert genotypes into paired allele columns for RUBIAS, maintaining associated metadata
+# 06 | Convert genotypes into paired allele columns for RUBIAS, maintaining associated metadata
 
 # Covert genind object into table with individual marker calls
 tmp <- adegenet::genind2df(dat.mixed.filtered, sep = "") %>%
@@ -191,7 +177,7 @@ write.csv(lwfMixed, "./MixtureSamples.csv")
 
 # =========================================
 
-# 08 | Match baseline and mixed stock files and export files (sample sizes and collection groupings)
+# 07 | Match baseline and mixed stock files and export files (sample sizes and collection groupings)
 
 # Create output for files
 dir.create("./output", showWarnings = FALSE)
