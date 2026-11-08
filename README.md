@@ -15,4 +15,4 @@ Genomic data was generated with a new genotyping-in-thousands (GT-seq) panel. Ge
 | 04_Baseline_Evaluation.R  | self-assignment, 100%, and realistic simulations  |
 | 05_Mixture_GSI.R  |  rubias `infer_mixture` (PB), 6 chains, Gelman-Rubin, CIs, P=0  |
 | 06_SampleSize_Analysis.R  | Fig 6 subsampling and RMSE vs mixture size  |
-| 07_Figures.R  | Figs 2, 4, 5  |
+| 07_Figures.R  | Figs 2, 4, 5, Suppl Fig 5  |
