@@ -89,8 +89,9 @@ gelman %>% ungroup() %>% summarise(max(PSRF))     # should be < 1.1
 write_csv(gelman, paste0("./output/GelmanRubin_", grouping, ".csv"))
 
 
-#############################################################################
-#### Pool chains: bootstrap-corrected estimate (mean over chains), 95% CI from the pooled trace ####
+# ====
+
+# Pool chains: Bootstrap-corrected estimate (mean over chains), 95% CI from the pooled trace
 RG_mix_ests <- bind_rows(chain_est) %>%
   group_by(mixture_collection, repunit) %>%
   summarise(repprop = mean(repprop),
@@ -101,8 +102,9 @@ trace_subset <- bind_rows(chain_trace)
 BSMod <- msaCI(RG_mix_ests, trace_subset)
 write_csv(BSMod, paste0("./output/GSI_estimates_BSMod_", grouping, ".csv"))
 
-##############################################################
-#Retrieve Mixture Collection Proportions
+# ====
+  
+# Retrieve mixture collection proportions
 SeasonalCollection <- BSMod %>%
   select(mixture_collection, repunit, repprop) %>% 
   mutate(repprop = if_else(repprop < 0,
@@ -121,7 +123,9 @@ MC <- SeasonalCollection %>% relocate(mixture_collection,
                                       GMZ5)
 write.csv(MC, paste0("./output/Mixture_Proportions_Collection_", grouping, ".csv"))
 
-####
+# ====
+
+# Generate table for supplementary table 1
 options(scipen = 999)
 Table <- BSMod %>%
   select(mixture_collection, repunit, bs_corrected_repunit_ppn, loCI_BS, hiCI_BS, sd_BS) %>%
@@ -129,8 +133,9 @@ Table <- BSMod %>%
   filter(bs_corrected_repunit_ppn != 0)
 write_csv(Table, paste0("./output/TableS1_GSI_estimates_", grouping, ".csv"))
 
-#################################################################################
-######################################P=0#################################
+# ====
+
+# P = 0 statistic
 P0 <- trace_subset %>%
   group_by(mixture_collection, repunit) %>%
   mutate(LT_1in1Mill = ifelse(BS_repprop < 0.0000005, 1, 0)) %>%
@@ -142,5 +147,3 @@ write_csv(P0, paste0("./output/P0_", grouping, ".csv"))
 
 runMSA("SeasonYearZone")
 runMSA("YearZone")
-
-
