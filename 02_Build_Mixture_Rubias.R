@@ -154,7 +154,7 @@ outTib <- tibble(a = 1:nrow(tmp2)) %>%
 
 for (i in 1:ncol(tmp2)) {
   out <- tmp2 %>% 
-    select(i) %>% 
+    select(all_of(i)) %>% 
     separate(1,
              into = c(colnames(tmp2)[i], paste0(colnames(tmp2)[i], ".1")),
              sep = 2) 
@@ -164,7 +164,7 @@ for (i in 1:ncol(tmp2)) {
 
 #Add sample metadata to allele columns
 lwfMixed <- outTib %>% 
-  mutate(across(everything(), ~na_if(., "000"))) %>% 
+  mutate(across(everything(), ~as.character(as.integer(.)))) %>% 
   mutate(sample_type = "mixture", .before = 1) %>% 
   mutate(repunit = NA, .after = 1) %>% 
   mutate(collection = Dat.mixed2$msaLotID, .after = 2) %>% 
@@ -183,7 +183,8 @@ write.csv(lwfMixed, "./MixtureSamples.csv")
 dir.create("./output", showWarnings = FALSE)
 
 # Read in baseline dataset (in RUBIAS format), this file defines all loci
-refDat <- read_csv("./lwfRubiasBaseline.csv")
+refDat <- read_csv("./lwfRubiasBaseline.csv") %>%
+  select(-c("891923_SNP1_102.1", "891923_SNP1_102", "569374_SNP1_156.1", "569374_SNP1_156"))
 
 # Export mixture RUBIAS files
 # Two groupings of the samples were analysed: management zone + year + season, and management zone + year
@@ -194,17 +195,17 @@ for (grouping in c("SeasonYearZone", "YearZone")) {
   }
   
   #Omiting samples sets with less than 20 samples
-  mixDat <- mixDat %>%
+  mixDatSam <- mixDat %>%
     group_by(collection) %>%
     filter(n() >= 20) %>% 
     ungroup()
   
-  sampleSize <- mixDat %>%
+  sampleSize <- mixDatSam %>%
     group_by(collection) %>%
     count()
   write.csv(sampleSize, paste0("./output/SampleSize_", grouping, ".csv"))
   
-  mixDat1 <- mixDat %>%
+  mixDat1 <- mixDatSam %>%
     select(colnames(refDat))
   
   setdiff(colnames(mixDat1), colnames(refDat))
